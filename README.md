@@ -1,6 +1,6 @@
-Programa conta com a participação de:
-# Alisson Matias
-# Diego Santiago
-# Pedro Amaral
-# Pedro Mascarenhas
+# Participantes do projeto:
+ Alisson Matias
+ Diego Santiago
+ Pedro Amaral
+ Pedro Mascarenhas
 
