@@ -51,7 +51,7 @@ public abstract class Menu {
                        } catch (Exception e) {
 
                        }
-                       
+
                    case 3:
                }
 
@@ -59,35 +59,35 @@ public abstract class Menu {
             } while (escolha != 0);
     }
 
-    public static String getNome() {
+    private static String getNome() {
         return nome;
     }
 
-    public static void setNome(String nome) {
+    private static void setNome(String nome) {
         Menu.nome = nome;
     }
 
-    public static String getLogin() {
+    private static String getLogin() {
         return login;
     }
 
-    public static void setLogin(String login) {
+    private static void setLogin(String login) {
         Menu.login = login;
     }
 
-    public static String getSenha() {
+    private static String getSenha() {
         return senha;
     }
 
-    public static void setSenha(String senha) {
+    private static void setSenha(String senha) {
         Menu.senha = senha;
     }
 
-    public static String getVerificarSenha() {
+    private static String getVerificarSenha() {
         return verificarSenha;
     }
 
-    public static void setVerificarSenha(String verificarSenha) {
+    private static void setVerificarSenha(String verificarSenha) {
         Menu.verificarSenha = verificarSenha;
     }
 }
