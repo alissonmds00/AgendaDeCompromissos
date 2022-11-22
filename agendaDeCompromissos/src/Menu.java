@@ -3,7 +3,16 @@ public abstract class Menu {
     private static String nome, login, senha, verificarSenha, password, username;
 
     private static void opcoes() {
-        System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:" + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-" + "\n 1- Efetuar o login" + "\n 2- Registrar nova pessoa" + "\n 3- Agendar um novo compromisso" + "\n 4- Listar todos meus compromissos" + "\n 5- Editar um compromisso existente" + "\n 6- Excluir um compromisso existente" + "\n 0- Sair e encerrar o programa" + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
+        System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
+                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
+                + "\n 1- Efetuar o login"
+                + "\n 2- Registrar nova pessoa"
+                + "\n 3- Agendar um novo compromisso"
+                + "\n 4- Listar todos meus compromissos"
+                + "\n 5- Editar um compromisso existente"
+                + "\n 6- Excluir um compromisso existente"
+                + "\n 0- Sair e encerrar o programa"
+                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
     }
 
     public static void start() {
@@ -46,6 +55,9 @@ public abstract class Menu {
                         break;
                     } catch (Exception e) {
 
+                    } finally {
+                        System.out.println("Usuário criado com sucesso!");
+                        System.out.println("-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
                     }
 
                 case 3:
