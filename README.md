@@ -2,7 +2,7 @@
 
 # Participantes do projeto:
 
-Alisson Matias, Diego Santiago, Pedro Amaral, Pedro Mascarenhas
+Alisson Matias, Danilo Santiago, Pedro Amaral, Pedro Mascarenhas
 
 # Processos de desenvolvimento:
 
