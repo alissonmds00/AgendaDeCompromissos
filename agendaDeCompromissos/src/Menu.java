@@ -27,6 +27,7 @@ public abstract class Menu {
                         setUsername(Input.setChar());
                         System.out.println("Informe sua senha: ");
                         setPassword(Input.setChar());
+
                         break;
                     } catch (Exception e) {
                         break;

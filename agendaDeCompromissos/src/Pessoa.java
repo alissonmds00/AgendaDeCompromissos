@@ -1,5 +1,8 @@
+import java.util.ArrayList;
+
 public class Pessoa {
     private String nome, login, senha;
+     public static ArrayList<Object> minhasCategorias = new ArrayList<>();
 
     public String getNome() {
         return nome;
