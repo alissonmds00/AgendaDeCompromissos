@@ -1,6 +1,7 @@
 public abstract class Menu {
     private static int escolha;
     private static String nome, login, senha, verificarSenha;
+
     private static void opcoes() {
         System.out.println(
                 "        Agenda de compromissos" +
@@ -17,46 +18,47 @@ public abstract class Menu {
                         "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
         );
     }
+
     public static void start() {
-            do {
-               opcoes();
-               escolha = Input.setNum();
+        do {
+            opcoes();
+            escolha = Input.setNum();
 
-               switch (escolha) {
-                   case 1:
-                       try {
+            switch (escolha) {
+                case 1:
+                    try {
 
-                       } catch (Exception e) {
-                           return ;
-                   } case 2:
-                       try {
-                           System.out.println("Informe seu nome: ");
-                           setNome(Input.setChar());
-                           System.out.println("Olá " + getNome() + ". Informe seu nome de usuário: ");
-                           setLogin(Input.setChar());
-                           System.out.println("Escreva uma senha: ");
-                           setSenha(Input.setChar());
-                           System.out.println("Confirme sua senha: ");
-                           setVerificarSenha(Input.setChar());
+                    } catch (Exception e) {
+                        return;
+                    }
+                case 2:
+                    try {
+                        System.out.println("Informe seu nome: ");
+                        setNome(Input.setChar());
+                        System.out.println("Olá " + getNome() + ". Informe seu nome de usuário: ");
+                        setLogin(Input.setChar());
+                        System.out.println("Escreva uma senha: ");
+                        setSenha(Input.setChar());
+                        System.out.println("Confirme sua senha: ");
+                        setVerificarSenha(Input.setChar());
 
-                           do {
-                               System.out.println(getNome() + ", As senhas informadas são diferentes. Digite novamente: ");
-                               System.out.println("Escreva uma senha: ");
-                               setSenha(Input.setChar());
-                               System.out.println("Confirme sua senha: ");
-                               setVerificarSenha(Input.setChar());
-                           } while (getSenha().equals(getVerificarSenha()) == false);
+                        do {
+                            System.out.println(getNome() + ", As senhas informadas são diferentes. Digite novamente: ");
+                            System.out.println("Escreva uma senha: ");
+                            setSenha(Input.setChar());
+                            System.out.println("Confirme sua senha: ");
+                            setVerificarSenha(Input.setChar());
+                        } while (getSenha().equals(getVerificarSenha()) == false);
+                        new Pessoa(getNome(), getLogin(), getSenha());
+                    } catch (Exception e) {
 
-                           new Pessoa(getNome(), getLogin(), getSenha());
-                       } catch (Exception e) {
+                    }
 
-                       }
-
-                   case 3:
-               }
+                case 3:
+            }
 
 
-            } while (escolha != 0);
+        } while (escolha != 0);
     }
 
     private static String getNome() {
