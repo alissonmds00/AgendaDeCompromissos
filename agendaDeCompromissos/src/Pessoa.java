@@ -1,8 +1,10 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Pessoa {
+    public static ArrayList<Object> minhasCategorias = new ArrayList<>();
     private String nome, login, senha;
 
     public String getNome() {
