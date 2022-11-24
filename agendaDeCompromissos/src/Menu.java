@@ -1,64 +1,125 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public abstract class Menu {
-    private static int escolha;
-    private static String nome, login, senha, verificarSenha;
+    private static String nome, login, senha, verificarSenha, password, username;
 
     private static void opcoes() {
-        System.out.println(
-                "        Agenda de compromissos" +
-                        "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" +
-                        "\n Escolha entre as seguintes opções:" +
-                        "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-" +
-                        "\n 1- Efetuar o login" +
-                        "\n 2- Registrar nova pessoa" +
-                        "\n 3- Agendar um novo compromisso" +
-                        "\n 4- Listar todos meus compromissos" +
-                        "\n 5- Editar um compromisso existente" +
-                        "\n 6- Excluir um compromisso existente" +
-                        "\n 0- Sair e encerrar o programa" +
-                        "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
-        );
+        System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
+                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
+                + "\n 1- Registrar nova pessoa"
+                + "\n 2- Agendar um novo compromisso"
+                + "\n 3- Listar todos meus compromissos"
+                + "\n 4- Editar um compromisso existente"
+                + "\n 5- Excluir um compromisso existente"
+                + "\n 6- Fazer logoff"
+                + "\n 0- Sair e encerrar o programa"
+                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
+    }
+
+    private static void sair() {
+        System.exit(0);
     }
 
     public static void start() {
-        do {
-            opcoes();
-            escolha = Input.setNum();
+        Scanner input = new Scanner(System.in);
 
-            switch (escolha) {
-                case 1:
-                    try {
+        System.out.println("1- Fazer login");
+        System.out.println("2- Registrar nova pessoa");
+        System.out.println("3- Encerrar");
 
-                    } catch (Exception e) {
-                        return;
-                    }
-                case 2:
-                    try {
-                        System.out.println("Informe seu nome: ");
-                        setNome(Input.setChar());
-                        System.out.println("Olá " + getNome() + ". Informe seu nome de usuário: ");
-                        setLogin(Input.setChar());
-                        System.out.println("Escreva uma senha: ");
-                        setSenha(Input.setChar());
-                        System.out.println("Confirme sua senha: ");
-                        setVerificarSenha(Input.setChar());
-
-                        do {
-                            System.out.println(getNome() + ", As senhas informadas são diferentes. Digite novamente: ");
-                            System.out.println("Escreva uma senha: ");
-                            setSenha(Input.setChar());
-                            System.out.println("Confirme sua senha: ");
-                            setVerificarSenha(Input.setChar());
-                        } while (getSenha().equals(getVerificarSenha()) == false);
-                        new Pessoa(getNome(), getLogin(), getSenha());
-                    } catch (Exception e) {
-
-                    }
-
-                case 3:
+        String command = input.nextLine();
+        switch (command) {
+            case "1" -> login();
+            case "2" -> {
+                Pessoa p = new Pessoa();
+                cadastrar(p);
+                start();
             }
+            case "3" -> sair();
+            default -> {
+                System.out.println("Comando inválido. Tente novamente:");
+                start();
+            }
+        }
+    }
 
+    private static void login() {
+        try {
+            Scanner keyboard = new Scanner(System.in);
 
-        } while (escolha != 0);
+            System.out.println("Usuário:");
+            String inputUser = keyboard.nextLine();
+
+            Scanner account = new Scanner(new File("agendaDeCompromissos/src/contas/" + inputUser + ".txt"));
+            String pass = account.nextLine();
+
+            System.out.println("Senha:");
+            String inputPwd = keyboard.nextLine();
+
+            if (inputPwd.equals(pass)) {
+                System.out.println("Autenticado com sucesso.");
+
+                String nome = account.nextLine();
+
+                System.out.println("Bem-vindo, " + nome + "!");
+                System.out.println("Logado como: " + inputUser);
+                mainMenu(inputUser);
+            } else {
+                System.out.println("Senha incorreta, tente novamente:");
+                login();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Usuário não encontrado, tente novamente:");
+            login();
+        }
+    }
+
+    private static void cadastrar(Pessoa p) {
+        Scanner detalhesConta = new Scanner(System.in);
+        System.out.println("Insira username:");
+        String user = detalhesConta.nextLine();
+        System.out.println("Insira senha:");
+        String senha = detalhesConta.nextLine();
+        System.out.println("Insira nome:");
+        String nome = detalhesConta.nextLine();
+
+        p.registrarConta(user, senha, nome);
+    }
+
+    private static void mainMenu(String inputUser) {
+        Scanner input = new Scanner(System.in);
+
+        opcoes();
+
+        Pessoa p = new Pessoa();
+
+        String escolha = input.nextLine();
+
+        switch (escolha) {
+            case "1":
+                cadastrar(p);
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                break;
+            case "6":
+                login();
+                break;
+            case "0":
+                sair();
+            default:
+                System.out.println("Comando inválido. Tente novamente:");
+                mainMenu(username);
+                break;
+        }
+        mainMenu(username);
     }
 
     private static String getNome() {
@@ -91,5 +152,21 @@ public abstract class Menu {
 
     private static void setVerificarSenha(String verificarSenha) {
         Menu.verificarSenha = verificarSenha;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        Menu.password = password;
+    }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        Menu.username = username;
     }
 }
