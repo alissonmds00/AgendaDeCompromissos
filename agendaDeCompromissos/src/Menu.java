@@ -26,12 +26,18 @@ public abstract class Menu {
         Scanner input = new Scanner(System.in);
 
         System.out.println("1- Fazer login");
-        System.out.println("2- Encerrar");
+        System.out.println("2- Registrar nova pessoa");
+        System.out.println("3- Encerrar");
 
         String command = input.nextLine();
         switch (command) {
             case "1" -> login();
-            case "2" -> sair();
+            case "2" -> {
+                Pessoa p = new Pessoa();
+                cadastrar(p);
+                start();
+            }
+            case "3" -> sair();
             default -> {
                 System.out.println("Comando inválido. Tente novamente:");
                 start();
@@ -70,6 +76,18 @@ public abstract class Menu {
         }
     }
 
+    private static void cadastrar(Pessoa p) {
+        Scanner detalhesConta = new Scanner(System.in);
+        System.out.println("Insira username:");
+        String user = detalhesConta.nextLine();
+        System.out.println("Insira senha:");
+        String senha = detalhesConta.nextLine();
+        System.out.println("Insira nome:");
+        String nome = detalhesConta.nextLine();
+
+        p.registrarConta(user, senha, nome);
+    }
+
     private static void mainMenu(String inputUser) {
         Scanner input = new Scanner(System.in);
 
@@ -81,15 +99,7 @@ public abstract class Menu {
 
         switch (escolha) {
             case "1":
-                Scanner detalhesConta = new Scanner(System.in);
-                System.out.println("Insira username:");
-                String user = detalhesConta.nextLine();
-                System.out.println("Insira senha:");
-                String senha = detalhesConta.nextLine();
-                System.out.println("Insira nome:");
-                String nome = detalhesConta.nextLine();
-
-                p.registrarConta(user, senha, nome);
+                cadastrar(p);
                 break;
             case "2":
                 break;
