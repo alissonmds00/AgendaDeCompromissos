@@ -80,7 +80,8 @@ public abstract class Menu {
         System.out.println("Insira nome: ");
         setNome(Input.setChar());
         System.out.println("Insira username: ");
-        setUser(Input.setChar()); ;
+        setUser(Input.setChar());
+        ;
         System.out.println("Insira senha: ");
         setSenha(Input.setChar());
         System.out.println("Confirme a senha: ");
@@ -128,15 +129,24 @@ public abstract class Menu {
     }
 
     private static void setNome(String nome) {
-        Menu.nome = nome;
+        // verificando se há algum número ou caractere inválido no nome
+        if (nome.strip().matches("[a-zA-ZááÁéÉíÍóÓúÚâÂêÊôÔãÃõÕçÇ]+") == true) {
+            Menu.nome = nome.strip(); // uso do strip para remover possíveis erros de digitação
+        }
+        else {
+            System.out.println("O seu nome não pode conter números. Informe-o novamente.");
+            System.out.println("Insira nome: ");
+            setNome(Input.setChar());
+        }
     }
 
+    // foram utilizados métodos "strip" para corrigir possíveis erros de digitação por parte do usuário
     private static String getLogin() {
         return login;
     }
 
     private static void setLogin(String login) {
-        Menu.login = login;
+        Menu.login = login.strip();
     }
 
     private static String getSenha() {
@@ -144,7 +154,7 @@ public abstract class Menu {
     }
 
     private static void setSenha(String senha) {
-        Menu.senha = senha;
+        Menu.senha = senha.strip();
     }
 
     private static String getVerificarSenha() {
@@ -152,17 +162,17 @@ public abstract class Menu {
     }
 
     private static void setVerificarSenha(String verificarSenha) {
-        if (verificarSenha.equals(getSenha())) {
-            Menu.verificarSenha = verificarSenha;
-        }
-        else {
+        // se a senha digitada e a senha de confirmação são diferentes, então o usuário digita novamente
+        if (verificarSenha.strip().equals(getSenha())) {
+            Menu.verificarSenha = verificarSenha.strip();
+        } else {
             do {
                 System.out.println("As senhas digitas não são iguais. Informe-as novamente");
                 System.out.println("Insira senha: ");
                 setSenha(Input.setChar());
                 System.out.println("Confirme a senha: ");
                 setVerificarSenha(Input.setChar());
-            } while(getSenha().equals(getVerificarSenha()) == false);
+            } while (getSenha().equals(getVerificarSenha()) == false);
         }
     }
 
