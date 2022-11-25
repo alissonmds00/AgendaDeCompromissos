@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public abstract class Menu {
-    private static String nome, login, senha, verificarSenha, password, username;
+    private static String nome, login, senha, verificarSenha, password, user;
 
     private static void opcoes() {
         System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
@@ -77,13 +77,14 @@ public abstract class Menu {
     }
 
     private static void cadastrar(Pessoa p) {
-        Scanner detalhesConta = new Scanner(System.in);
-        System.out.println("Insira username:");
-        String user = detalhesConta.nextLine();
-        System.out.println("Insira senha:");
-        String senha = detalhesConta.nextLine();
-        System.out.println("Insira nome:");
-        String nome = detalhesConta.nextLine();
+        System.out.println("Insira nome: ");
+        setNome(Input.setChar());
+        System.out.println("Insira username: ");
+        setUser(Input.setChar()); ;
+        System.out.println("Insira senha: ");
+        setSenha(Input.setChar());
+        System.out.println("Confirme a senha: ");
+        setVerificarSenha(Input.setChar());
 
         p.registrarConta(user, senha, nome);
     }
@@ -116,10 +117,10 @@ public abstract class Menu {
                 sair();
             default:
                 System.out.println("Comando inválido. Tente novamente:");
-                mainMenu(username);
+                mainMenu(user);
                 break;
         }
-        mainMenu(username);
+        mainMenu(user);
     }
 
     private static String getNome() {
@@ -151,7 +152,18 @@ public abstract class Menu {
     }
 
     private static void setVerificarSenha(String verificarSenha) {
-        Menu.verificarSenha = verificarSenha;
+        if (verificarSenha.equals(getSenha())) {
+            Menu.verificarSenha = verificarSenha;
+        }
+        else {
+            do {
+                System.out.println("As senhas digitas não são iguais. Informe-as novamente");
+                System.out.println("Insira senha: ");
+                setSenha(Input.setChar());
+                System.out.println("Confirme a senha: ");
+                setVerificarSenha(Input.setChar());
+            } while(getSenha().equals(getVerificarSenha()) == false);
+        }
     }
 
     public static String getPassword() {
@@ -162,11 +174,11 @@ public abstract class Menu {
         Menu.password = password;
     }
 
-    public static String getUsername() {
-        return username;
+    public static String getUser() {
+        return user;
     }
 
-    public static void setUsername(String username) {
-        Menu.username = username;
+    public static void setUser(String username) {
+        Menu.user = username;
     }
 }
