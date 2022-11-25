@@ -81,7 +81,6 @@ public abstract class Menu {
         setNome(Input.setChar());
         System.out.println("Insira username: ");
         setUser(Input.setChar());
-        ;
         System.out.println("Insira senha: ");
         setSenha(Input.setChar());
         System.out.println("Confirme a senha: ");
