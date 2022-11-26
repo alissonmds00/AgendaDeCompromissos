@@ -38,7 +38,7 @@ public class Pessoa {
     public void registrarConta(String user, String pwd, String name) {
         try {
             File newUser = new File("agendaDeCompromissos/src/contas/" + user + ".txt");
-            System.out.println("Criado txt: " + newUser.getAbsolutePath());
+            // System.out.println("Criado txt: " + newUser.getAbsolutePath()); DEBUG
             if (!newUser.createNewFile()) {
                 System.out.println("Conta já registrada.");
                 return;
