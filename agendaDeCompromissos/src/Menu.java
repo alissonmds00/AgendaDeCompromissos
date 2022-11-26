@@ -95,6 +95,7 @@ public abstract class Menu {
         opcoes();
 
         Pessoa p = new Pessoa();
+        Calendario c = new Calendario();
 
         String escolha = input.nextLine();
 
@@ -103,6 +104,12 @@ public abstract class Menu {
                 cadastrar(p);
                 break;
             case "2":
+                c.setDia(31); // DEBUG...
+                c.setMes(04);
+                c.setAno(2022);
+                c.setHora(16);
+                c.setMin(40);
+                c.validarHorario(c.parseInput()); // DEBUG fim
                 break;
             case "3":
                 break;
