@@ -95,8 +95,6 @@ public abstract class Menu {
         opcoes();
 
         Pessoa p = new Pessoa();
-        Calendario c = new Calendario();
-
         String escolha = input.nextLine();
 
         switch (escolha) {
@@ -104,12 +102,7 @@ public abstract class Menu {
                 cadastrar(p);
                 break;
             case "2":
-                c.setDia(31); // DEBUG...
-                c.setMes(04);
-                c.setAno(2022);
-                c.setHora(16);
-                c.setMin(40);
-                c.validarHorario(c.parseInput()); // DEBUG fim
+                Calendario.agendar();// DEBUG fim
                 break;
             case "3":
                 break;
@@ -178,7 +171,7 @@ public abstract class Menu {
                 setSenha(Input.setChar());
                 System.out.println("Confirme a senha: ");
                 setVerificarSenha(Input.setChar());
-            } while (getSenha().equals(getVerificarSenha()) == false);
+            } while (!getSenha().equals(getVerificarSenha()));
         }
     }
 

@@ -4,86 +4,81 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Calendario {
-    private int hora, min, dia, mes, ano;
-    final int anoAtual = YearMonth.now().getYear();
+    private static int hora, min, dia, mes, ano;
+    final static int anoAtual = YearMonth.now().getYear();
 
-    public int getHora() {
+    public static int getHora() {
         return hora;
     }
 
-    public void setHora(int hora) {
-        if (hora >= 0 && hora < 24) {
-            this.hora = hora;
+    public static void setHora(int Hora) {
+        if (Hora >= 0 && Hora < 24) {
+            hora = Hora;
         } else {
-            do {
-                System.out.println("A hora informada é inválida. Tente novamente: ");
-                hora = Input.setNum();
-            } while (hora >= 0 && hora < 24);
+            System.out.println("A hora informada é inválida. Tente novamente: ");
+            Hora = Input.setNum();
+            setHora(Hora);
         }
     }
 
-    public int getMin() {
+    public static int getMin() {
         return min;
     }
 
-    public void setMin(int min) {
-        if (min >= 0 && min < 60) {
-            this.min = min;
+    public static void setMin(int Min) {
+        if (Min >= 0 && Min < 60) {
+            min = Min;
         } else {
-            do {
-                System.out.println("O minuto informado é inválido. Tente novamente: ");
-                min = Input.setNum();
-            } while (min >= 0 && min < 60);
+            System.out.println("O minuto informado é inválido. Tente novamente: ");
+            Min = Input.setNum();
+            setMin(Min);
         }
     }
 
-    public int getDia() {
+    public static int getDia() {
         return dia;
     }
 
-    public void setDia(int dia) {
-        if (dia > 0 && dia < 32) {
-            this.dia = dia;
+    public static void setDia(int Dia) {
+        if (Dia > 0 && Dia < 32) {
+            dia = Dia;
         } else {
-            do {
-                System.out.println("O dia informado é inválido. Tente novamente: ");
-                dia = Input.setNum();
-            } while (dia > 0 || dia < 32);
+            System.out.println("O dia informado é inválido. Tente novamente: ");
+            Dia = Input.setNum();
+            setDia(Dia);
         }
     }
 
-    public int getMes() {
+    public static int getMes() {
         return mes;
     }
 
-    public void setMes(int mes) {
-        if (mes > 0 && mes < 13) { // o mês precisa estar contido no intervalo de [1, 12] {
-            this.mes = mes;
+    public static void setMes(int Mes) {
+        if (Mes > 0 && Mes < 13) { // o mês precisa estar contido no intervalo de [1, 12] {
+            mes = Mes;
         } else {
-            do {
-                System.out.println("O mês inserido é invalido. Informe o mês novamente: ");
-                mes = Input.setNum();
-            } while (mes < 0 || mes > 12);
+            System.out.println("O mês inserido é invalido. Informe o mês novamente: ");
+            Mes = Input.setNum();
+            setMes(Mes);
         }
     }
 
-    public int getAno() {
+    public static int getAno() {
         return ano;
     }
 
-    public void setAno(int ano) {
-        if (ano >= getAnoAtual()) {
-            this.ano = ano;
+    public static void setAno(int Ano) {
+        if (Ano >= getAnoAtual()) {
+            ano = Ano;
         } else {
-            do {
-                System.out.println("Não é possível agendar um compromisso para anos anteriores a " + getAnoAtual() +
-                        "\nDigite novamente: ");
-                ano = Input.setNum();
-            } while (ano < getAnoAtual());
+            System.out.println("Não é possível agendar um compromisso para anos anteriores a " + getAnoAtual() +
+                    "\nDigite novamente: ");
+            Ano = Input.setNum();
+            setAno(Ano);
         }
     }
 
-    public int getAnoAtual() {
+    public static int getAnoAtual() {
         return anoAtual;
     }
 
@@ -111,18 +106,38 @@ public class Calendario {
     public void validarHorario(ZonedDateTime horaCompromisso) {
         ZoneId tz = ZoneId.of("America/Bahia"); // definir fuso horario
         ZonedDateTime curr = ZonedDateTime.now(tz); // hora atual com fuso horario considerado
-        if(horaCompromisso.compareTo(curr) > 0) // passa caso horario do compromisso seja depois do horario atual
+        if (horaCompromisso.compareTo(curr) > 0) // passa caso horario do compromisso seja depois do horario atual
         {
-            System.out.println("setar compromisso etc");
+            System.out.println("Compromisso agendado para o dia: " + getDia() + "/" + getMes() + "/" + getAno() + " às " + getHora() + ":" + getMin());
+            // Criar aqui o array que ele irá adicionar
+        } else {
+            System.out.println("Horario do compromisso ja passou!");
         }
-        else { System.out.println("Horario do compromisso ja passou!"); }
     }
 
-    public Calendario() {}
+    public Calendario() {
+    }
 
-    public Calendario(int dia, int mes, int ano) {
+    public static <c> void agendar() {
+        System.out.println("Informe o dia para agendar o compromisso: ");
+        setDia(Input.setNum());
+        System.out.println("Informe o mês para agendar o compromisso: ");
+        setMes(Input.setNum());
+        System.out.println("Informe o ano para agendar o compromisso: ");
+        setAno(Input.setNum());
+        System.out.println("Informe a hora do compromisso: ");
+        setHora(Input.setNum());
+        System.out.println("Informe os minutos do compromisso: ");
+        setMin(Input.setNum());
+        Calendario c = new Calendario(getDia(), getMes(), getAno(), getHora(), getMin());
+        c.validarHorario(c.parseInput());
+    }
+
+    public Calendario(int dia, int mes, int ano, int hora, int min) {
         this.dia = dia;
         this.mes = mes;
         this.ano = ano;
+        this.hora = hora;
+        this.min = min;
     }
 }
