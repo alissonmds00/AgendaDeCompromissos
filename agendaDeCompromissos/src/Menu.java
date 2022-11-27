@@ -1,16 +1,21 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public abstract class Menu {
     private static String nome, login, senha, verificarSenha, password, user;
+    private static ArrayList<Pessoa> cadastrados = new ArrayList<>();
+
+    Pessoa adal = new Pessoa("Adalberto", "Adal", "1");
 
     private static void opcoes() {
         System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
                 + "\n 1- Registrar nova pessoa"
                 + "\n 2- Agendar um novo compromisso"
-                + "\n 3- Listar todos meus compromissos"
+                + "\n 3- Listar todas as categorias"
                 + "\n 4- Editar um compromisso existente"
                 + "\n 5- Excluir um compromisso existente"
                 + "\n 6- Fazer logoff"
@@ -24,7 +29,6 @@ public abstract class Menu {
 
     public static void start() {
         Scanner input = new Scanner(System.in);
-
         System.out.println("1- Fazer login");
         System.out.println("2- Registrar nova pessoa");
         System.out.println("3- Encerrar");
@@ -65,7 +69,8 @@ public abstract class Menu {
 
                 System.out.println("Bem-vindo, " + nome + "!");
                 System.out.println("Logado como: " + inputUser);
-                mainMenu(inputUser);
+
+                mainMenu(encontrarPessoa(inputUser));
             } else {
                 System.out.println("Senha incorreta, tente novamente:");
                 login();
@@ -74,6 +79,20 @@ public abstract class Menu {
             System.out.println("Usuário não encontrado, tente novamente:");
             login();
         }
+    }
+
+    public static Pessoa encontrarPessoa(String login) {
+        Pessoa pessoa = null;
+        if(cadastrados.size() > 0){
+            for(Pessoa c: cadastrados) {
+                if(Objects.equals(c.getLogin(), login)) {
+                    pessoa = c;
+                }
+            }
+        }else{
+            System.out.println("Não há pessoas cadastradas");
+        }
+        return pessoa;
     }
 
     private static void cadastrar(Pessoa p) {
@@ -87,9 +106,11 @@ public abstract class Menu {
         setVerificarSenha(Input.setChar());
 
         p.registrarConta(user, senha, nome);
+        Pessoa pessoa = new Pessoa(nome, user, senha);
+        cadastrados.add(pessoa);
     }
 
-    private static void mainMenu(String inputUser) {
+    private static void mainMenu(Pessoa user) {
         Scanner input = new Scanner(System.in);
 
         opcoes();
@@ -105,6 +126,8 @@ public abstract class Menu {
                 Calendario.agendar();// DEBUG fim
                 break;
             case "3":
+                System.out.println("Categorias criadas até o momento: ");
+                user.listarCategorias(); // lista as categorias do usuário específico
                 break;
             case "4":
                 break;
