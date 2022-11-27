@@ -8,7 +8,7 @@ public abstract class Menu {
     private static String nome, login, senha, verificarSenha, password, user;
     private static ArrayList<Pessoa> cadastrados = new ArrayList<>();
 
-    Pessoa adal = new Pessoa("Adalberto", "Adal", "1");
+    Pessoa adal = new Pessoa("Adalberto", "adal", "1");
 
     private static void opcoes() {
         System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
@@ -130,6 +130,7 @@ public abstract class Menu {
                 user.listarCategorias(); // lista as categorias do usuário específico
                 break;
             case "4":
+                user.selecionarCategoria();
                 break;
             case "5":
                 break;

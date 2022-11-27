@@ -3,6 +3,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Locale;
 
 public class Pessoa {
     public static ArrayList<String> minhasCategorias = new ArrayList<>();
@@ -61,50 +62,63 @@ public class Pessoa {
     }
 
     public void criarCategorias() {
-        // permite o usuário criar categorias
+        // permite o usuário criar categorias novas.
         String categoria;
         System.out.println("Informe o nome da categoria que quer criar: ");
         categoria = Input.setChar();
-        minhasCategorias.add(categoria);
-
-    }
-
-/*    public String selecionarCategorias(String usuario) {
-        // exibir todas as categorias do usuário
-        int categoria = 0;
-        for (int c = 0; c <= minhasCategorias.size()-1; c++) {
-            System.out.println(c + " - " + minhasCategorias.get(c));
-        }
-
-        System.out.println("Selecione a categoria que quer utilizar: ");
-
-        try {
-            categoria = Input.setNum();
-
-        } catch (IndexOutOfBoundsException e) {
-            while (categoria >= minhasCategorias.size() || categoria <= 0) {
-                System.out.println("Por favor selecione um número entre " + 0 + " e " + minhasCategorias.size());
-                categoria = Input.setNum();
+        int duplicado = 0;
+        for (int c = 0; c < minhasCategorias.size(); c++)
+            if (minhasCategorias.get(c).equals(categoria)) {
+                duplicado++;
             }
-        } catch (InputMismatchException e) {
-            System.out.println("O valor digitado deve ser numérico, tente novamente");
-
-        }
-        return minhasCategorias.get(categoria);
+        if (duplicado == 0) {
+            minhasCategorias.add(categoria);
+        } else {
+            System.out.println("Categoria já existente");
+            criarCategorias();
+        } // Não permite a criação de uma categoria que já existe.
     }
 
- */
-    public void listarCategorias(){
+
+/*    public void listarCategorias() {
         if (minhasCategorias.size() > 0) {
             for (String c : minhasCategorias) {
                 System.out.println(c);
             }
         }
+    } //Lista as categorias existentes.
+    */
+
+    public void listarCategorias() {
+        System.out.println("Qual a categoria do seu compromisso? ");
+        for (int c = 0; c < minhasCategorias.size(); c++) {
+            System.out.println(c + " - " + minhasCategorias.get(c));
+        }
+        System.out.println("Ou digite o nome da categoria para criar uma nova");
     }
+
+    public String selecionarCategoria() {
+        listarCategorias();
+        try {
+            String escolha = Input.setChar();
+            System.out.println("A categoria " + minhasCategorias.get(Integer.parseInt(escolha)));
+            return minhasCategorias.get(Integer.parseInt(escolha));
+        } catch (Exception e) {
+            System.out.println("Categoria não encontrada." + "\n Deseja criar uma nova? [S/N]: ");
+            String sn = Input.setChar().toUpperCase().strip();
+            if (sn.startsWith("S")) {
+                criarCategorias();
+                System.out.println("A categoria " + minhasCategorias.get(minhasCategorias.size() -1) + " foi selecionada");
+                return (minhasCategorias.get(minhasCategorias.size() - 1));
+            } else {
+                System.out.println("A categoria " + minhasCategorias.get(0) + " foi selecionada");
+                return minhasCategorias.get(0);
+            }
+        }
+    }
+
     public Pessoa() {
     }
-
-
 
     public Pessoa(String nome, String login, String senha) {
         this.nome = nome;
