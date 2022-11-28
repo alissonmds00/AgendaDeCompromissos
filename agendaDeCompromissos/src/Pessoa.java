@@ -67,16 +67,21 @@ public class Pessoa {
         System.out.println("Informe o nome da categoria que quer criar: ");
         categoria = Input.setChar();
         int duplicado = 0;
-        for (int c = 0; c < minhasCategorias.size(); c++)
+        for (int c = 0; c < minhasCategorias.size(); c++) {
             if (minhasCategorias.get(c).equals(categoria)) {
                 duplicado++;
             }
+        }
         if (duplicado == 0) {
             minhasCategorias.add(categoria);
         } else {
             System.out.println("Categoria já existente");
             criarCategorias();
         } // Não permite a criação de uma categoria que já existe.
+    }
+
+    public void autoCriarCategorias(String cat) { // utilizado somente em criarPessoa() pois PULA CHECAGENS, POR PUXAR DIRETO DO .TXT DA CONTA
+        minhasCategorias.add(cat);
     }
 
 
@@ -90,11 +95,11 @@ public class Pessoa {
     */
 
     public void listarCategorias() {
-        System.out.println("Qual a categoria do seu compromisso? ");
+        // System.out.println("Qual a categoria do seu compromisso? ");
         for (int c = 0; c < minhasCategorias.size(); c++) {
             System.out.println(c + " - " + minhasCategorias.get(c));
         }
-        System.out.println("Ou digite o nome da categoria para criar uma nova");
+        // System.out.println("Ou digite o nome da categoria para criar uma nova");
     }
 
     public String selecionarCategoria() {
@@ -122,6 +127,6 @@ public class Pessoa {
     public Pessoa(String nome) {
         this.nome = nome;
 
-        minhasCategorias.add("Default: " + nome); // A categoria padrão do usuário será o próprio nome dele
+        minhasCategorias.add("Default: " + nome); // A categoria padrão do usuário será o próprio nome dele. Utilizado em criarPessoa() para manter a categoria default
     }
 }
