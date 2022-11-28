@@ -52,7 +52,7 @@ public class Pessoa {
         }
         try {
             FileWriter writeUser = new FileWriter("agendaDeCompromissos/src/contas/" + user + ".txt");
-            writeUser.write(pwd + '\n' + name);
+            writeUser.write(pwd + '\n' + name + "\n<CATEG_SEP>\n<COMP_SEP>");
             writeUser.close();
             System.out.println("Registrada conta: " + user + '.');
 
@@ -117,13 +117,11 @@ public class Pessoa {
         }
     }
 
-    public Pessoa() {
-    }
+    public Pessoa() {}
 
-    public Pessoa(String nome, String login, String senha) {
+    public Pessoa(String nome) {
         this.nome = nome;
-        this.login = login;
-        this.senha = senha;
-        minhasCategorias.add("Defaul: " + nome); // A categoria padrão do usuário será o próprio nome dele
+
+        minhasCategorias.add("Default: " + nome); // A categoria padrão do usuário será o próprio nome dele
     }
 }

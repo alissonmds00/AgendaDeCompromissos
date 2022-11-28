@@ -8,8 +8,6 @@ public abstract class Menu {
     private static String nome, login, senha, verificarSenha, password, user;
     private static ArrayList<Pessoa> cadastrados = new ArrayList<>();
 
-    Pessoa adal = new Pessoa("Adalberto", "adal", "1");
-
     private static void opcoes() {
         System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
@@ -69,7 +67,7 @@ public abstract class Menu {
                 System.out.println("Bem-vindo, " + nome + "!");
                 System.out.println("Logado como: " + inputUser);
 
-                mainMenu(encontrarPessoa(inputUser));
+                mainMenu(criarPessoa(inputUser));
             } else {
                 System.out.println("Senha incorreta, tente novamente:");
                 login();
@@ -80,18 +78,27 @@ public abstract class Menu {
         }
     }
 
-    public static Pessoa encontrarPessoa(String login) {
-        Pessoa pessoa = null;
-        if(cadastrados.size() > 0){
-            for(Pessoa c: cadastrados) {
-                if(Objects.equals(c.getLogin(), login)) {
-                    pessoa = c;
-                }
-            }
-        }else{
-            System.out.println("Não há pessoas cadastradas");
-        }
-        return pessoa;
+    public static Pessoa criarPessoa(String login) throws FileNotFoundException {
+        Scanner file = new Scanner(new File("agendaDeCompromissos/src/contas/" + login + ".txt")); // accessar conta
+        file.nextLine(); // pular linha com senha
+        Pessoa temp = new Pessoa(file.nextLine()); // criar Pessoa com nome
+
+
+
+        /*
+        senha
+        nome
+        <SEP1>
+        cats
+        <SEP2>
+        comp1
+        catComp1,cat2Comp1
+         */
+
+
+
+
+        return temp;
     }
 
     private static void cadastrar(Pessoa p) {
@@ -105,7 +112,7 @@ public abstract class Menu {
         setVerificarSenha(Input.setChar());
 
         p.registrarConta(user, senha, nome);
-        Pessoa pessoa = new Pessoa(nome, user, senha);
+        Pessoa pessoa = new Pessoa();
         cadastrados.add(pessoa);
     }
 
@@ -152,7 +159,7 @@ public abstract class Menu {
 
     private static void setNome(String nome) {
         // verificando se há algum número ou caractere inválido no nome
-        if (nome.strip().matches("[a-zA-ZááÁéÉíÍóÓúÚâÂêÊôÔãÃõÕçÇ]+") == true) {
+        if (nome.strip().matches("[a-zA-ZááÁéÉíÍóÓúÚâÂêÊôÔãÃõÕçÇ]+")) {
             Menu.nome = nome.strip(); // uso do strip para remover possíveis erros de digitação
         }
         else {
