@@ -9,15 +9,20 @@ public abstract class Menu {
     private static ArrayList<Pessoa> cadastrados = new ArrayList<>();
 
     private static void opcoes() {
-        System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
+        System.out.println(
+                "        Agenda de compromissos"
+                + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-"
+                + "\n Escolha entre as seguintes opções:"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
                 + "\n 1- Agendar um novo compromisso"
                 + "\n 2- Listar todas as categorias"
-                + "\n 3- Editar um compromisso existente"
-                + "\n 4- Excluir um compromisso existente"
-                + "\n 5- Fazer logoff"
+                + "\n 3- Adicionar categoria"
+                + "\n 4- Editar um compromisso existente"
+                + "\n 5- Excluir um compromisso existente"
+                + "\n 6- Fazer logoff"
                 + "\n 0- Sair e encerrar o programa"
-                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
+                + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
+        );
     }
 
     private static void sair() {
@@ -81,22 +86,24 @@ public abstract class Menu {
     public static Pessoa criarPessoa(String login) throws FileNotFoundException {
         Scanner file = new Scanner(new File("agendaDeCompromissos/src/contas/" + login + ".txt")); // accessar conta
         file.nextLine(); // pular linha com senha
-        Pessoa temp = new Pessoa(file.nextLine()); // criar Pessoa com nome
+        Pessoa temp = new Pessoa(file.nextLine()); // criar Pessoa com nome (este construtor gera a categoria default do usuario!)
 
+        // setup categorias
+        file.nextLine(); // separador de categorias
+        String line = file.nextLine(); // setup while seguinte
+        while(file.hasNextLine() && !line.equals("<COMP_SEP>")) { // iterar enquanto houverem categorias
+            temp.autoCriarCategorias(line);
+            line = file.nextLine();
+        }
 
-
-        /*
-        senha
-        nome
-        <SEP1>
-        cats
-        <SEP2>
-        comp1
-        catComp1,cat2Comp1
-         */
-
-
-
+        // setup compromissos
+        line = file.nextLine(); // separador de compromissos
+        while(file.hasNextLine()) { // tomar linhas dois a dois...
+            System.out.println(line); // DEBUG AGUARDANDO CRIAR COMPROMISSOS
+            line = file.nextLine();
+            System.out.println(line); // DEBUG AGUARDANDO CRIAR COMPROMISSOS
+            if(file.hasNextLine()) line = file.nextLine(); // ...e entao considerar passar para a proxima linha (implica que ha outro compromisso)
+        }
 
         return temp;
     }
@@ -117,34 +124,32 @@ public abstract class Menu {
     }
 
     private static void mainMenu(Pessoa user) {
-        Scanner input = new Scanner(System.in);
-
         opcoes();
 
-        Pessoa p = new Pessoa();
+        Scanner input = new Scanner(System.in);
         String escolha = input.nextLine();
-
         switch (escolha) {
-            case "1":
-                cadastrar(p);
+            case "1": // Agendar um novo compromisso
+                Calendario.agendar(); //incompl
                 break;
-            case "2":
-                Calendario.agendar();// DEBUG fim
+            case "2": // Listar todas as categorias
+                user.listarCategorias();
                 break;
-            case "3":
+            case "3": // Adicionar categoria
                 System.out.println("Categorias criadas até o momento: ");
                 user.listarCategorias(); // lista as categorias do usuário específico
                 break;
-            case "4":
+            case "4": // Editar um compromisso existente
                 user.selecionarCategoria();
                 break;
-            case "5":
+            case "5": // Excluir um compromisso existente
                 break;
-            case "6":
+            case "6": // Fazer logoff
                 login();
                 break;
-            case "0":
+            case "0": // Sair e encerrar o programa
                 sair();
+                break;
             default:
                 System.out.println("Comando inválido. Tente novamente:");
                 mainMenu(user);
@@ -163,7 +168,7 @@ public abstract class Menu {
             Menu.nome = nome.strip(); // uso do strip para remover possíveis erros de digitação
         }
         else {
-            System.out.println("O seu nome não pode conter números. Informe-o novamente.");
+            System.out.println("O seu nome não pode conter números ou outros caracteres fora letras. Informe-o novamente.");
             System.out.println("Insira nome: ");
             setNome(Input.setChar());
         }
@@ -196,7 +201,7 @@ public abstract class Menu {
             Menu.verificarSenha = verificarSenha.strip();
         } else {
             do {
-                System.out.println("As senhas digitas não são iguais. Informe-as novamente");
+                System.out.println("As senhas digitadas não são iguais. Informe-as novamente");
                 System.out.println("Insira senha: ");
                 setSenha(Input.setChar());
                 System.out.println("Confirme a senha: ");
