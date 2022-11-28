@@ -13,12 +13,11 @@ public abstract class Menu {
     private static void opcoes() {
         System.out.println("        Agenda de compromissos" + "\n-=-=-=-=-=-=-=-=- MENU -=-=-=-=-=-=-=-=-" + "\n Escolha entre as seguintes opções:"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
-                + "\n 1- Registrar nova pessoa"
-                + "\n 2- Agendar um novo compromisso"
-                + "\n 3- Listar todas as categorias"
-                + "\n 4- Editar um compromisso existente"
-                + "\n 5- Excluir um compromisso existente"
-                + "\n 6- Fazer logoff"
+                + "\n 1- Agendar um novo compromisso"
+                + "\n 2- Listar todas as categorias"
+                + "\n 3- Editar um compromisso existente"
+                + "\n 4- Excluir um compromisso existente"
+                + "\n 5- Fazer logoff"
                 + "\n 0- Sair e encerrar o programa"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-");
     }
