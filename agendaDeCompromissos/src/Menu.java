@@ -15,12 +15,14 @@ public abstract class Menu {
                 + "\n Escolha entre as seguintes opções:"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
                 + "\n 1- Agendar um novo compromisso"
-                + "\n 2- Listar todas as categorias"
-                + "\n 3- Adicionar categoria"
-                + "\n 4- Editar um compromisso existente"
-                + "\n 5- Excluir um compromisso existente"
-                + "\n 6- Fazer logoff"
-                + "\n 0- Sair e encerrar o programa"
+                + "\n 2- Listar todos os compromissos"
+                + "\n 3- Editar um compromisso existente"
+                + "\n 4- Excluir um compromisso existente"
+                + "\n 5- Adicionar categoria"
+                + "\n 6- Listar todas as categorias"
+                + "\n 7- Excluir uma categoria existente"
+                + "\n 8- Fazer logoff"
+                + "\n 9- Sair e encerrar o programa"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
         );
     }
@@ -72,7 +74,7 @@ public abstract class Menu {
                 System.out.println("Bem-vindo, " + nome + "!");
                 System.out.println("Logado como: " + inputUser);
 
-                mainMenu(criarPessoa(inputUser));
+                mainMenu(criarPessoa(nome, inputUser, inputPwd));
             } else {
                 System.out.println("Senha incorreta, tente novamente:");
                 login();
@@ -83,10 +85,10 @@ public abstract class Menu {
         }
     }
 
-    public static Pessoa criarPessoa(String login) throws FileNotFoundException {
+    public static Pessoa criarPessoa(String nome, String login, String senha) throws FileNotFoundException {
         Scanner file = new Scanner(new File("agendaDeCompromissos/src/contas/" + login + ".txt")); // accessar conta
         file.nextLine(); // pular linha com senha
-        Pessoa temp = new Pessoa(file.nextLine()); // criar Pessoa com nome (este construtor gera a categoria default do usuario!)
+        Pessoa temp = new Pessoa(nome, file.nextLine(), senha); // criar Pessoa com nome (este construtor gera a categoria default do usuario!)
 
         // setup categorias
         file.nextLine(); // separador de categorias
@@ -97,7 +99,7 @@ public abstract class Menu {
         }
 
         // setup compromissos
-        line = file.nextLine(); // separador de compromissos
+        if(file.hasNextLine()) line = file.nextLine(); // separador de compromissos
         while(file.hasNextLine()) { // tomar linhas dois a dois...
             System.out.println(line); // DEBUG AGUARDANDO CRIAR COMPROMISSOS
             line = file.nextLine();
@@ -107,6 +109,16 @@ public abstract class Menu {
 
         return temp;
     }
+
+//    public static void salvarPessoa(Pessoa p) throws FileNotFoundException {
+//        String path = "agendaDeCompromissos/src/contas/" + p.getLogin() + ".txt";
+//
+//        File oldFile = new File(path); // accessar conta
+//        oldFile.delete();
+//
+//        Scanner newFile = new Scanner(new File(path));
+//
+//    }
 
     private static void cadastrar(Pessoa p) {
         System.out.println("Insira nome: ");
@@ -125,29 +137,39 @@ public abstract class Menu {
 
     private static void mainMenu(Pessoa user) {
         opcoes();
+        // System.out.println("DEBUG " + user.getNome() + " " + user.getLogin() + " " + user.getSenha());
 
         Scanner input = new Scanner(System.in);
         String escolha = input.nextLine();
         switch (escolha) {
             case "1": // Agendar um novo compromisso
-                Calendario.agendar(); //incompl
+                user.agendarCompromisso();
+                // Calendario.agendar(); incompl
                 break;
-            case "2": // Listar todas as categorias
-                user.listarCategorias();
+            case "2": // Listar todos os compromissos
+                user.listarCompromissos();
                 break;
-            case "3": // Adicionar categoria
+            case "3": // Editar um compromisso existente
+                user.editarCompromisso();
+                break;
+            case "4": // Excluir um compromisso existente
+                user.removerCompromisso();
+                break;
+            case "5": // Adicionar categoria
                 System.out.println("Categorias criadas até o momento: ");
                 user.listarCategorias(); // lista as categorias do usuário específico
+                user.criarCategorias();
                 break;
-            case "4": // Editar um compromisso existente
-                user.selecionarCategoria();
+            case "6": // Listar todas as categorias
+                user.listarCategorias();
                 break;
-            case "5": // Excluir um compromisso existente
+            case "7": // Excluir uma categoria existente
+                user.excluirCategoria();
                 break;
-            case "6": // Fazer logoff
+            case "8": // Fazer logoff
                 login();
                 break;
-            case "0": // Sair e encerrar o programa
+            case "9": // Sair e encerrar o programa
                 sair();
                 break;
             default:
@@ -209,6 +231,8 @@ public abstract class Menu {
             } while (!getSenha().equals(getVerificarSenha()));
         }
     }
+
+
 
     public static String getPassword() {
         return password;

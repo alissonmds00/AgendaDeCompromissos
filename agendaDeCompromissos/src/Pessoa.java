@@ -1,12 +1,18 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Locale;
+import java.util.Scanner;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Pessoa {
     public static ArrayList<String> minhasCategorias = new ArrayList<>();
+    public static ArrayList<Compromissos> meusCompromissos = new ArrayList<>();
+
 
     private String nome, login, senha;
 
@@ -61,6 +67,8 @@ public class Pessoa {
         }
     }
 
+    // seção categorias
+
     public void criarCategorias() {
         // permite o usuário criar categorias novas.
         String categoria;
@@ -72,8 +80,11 @@ public class Pessoa {
                 duplicado++;
             }
         }
+
         if (duplicado == 0) {
             minhasCategorias.add(categoria);
+
+
         } else {
             System.out.println("Categoria já existente");
             criarCategorias();
@@ -84,30 +95,21 @@ public class Pessoa {
         minhasCategorias.add(cat);
     }
 
-
-/*    public void listarCategorias() {
-        if (minhasCategorias.size() > 0) {
-            for (String c : minhasCategorias) {
-                System.out.println(c);
-            }
-        }
-    } //Lista as categorias existentes.
-    */
-
     public void listarCategorias() {
-        // System.out.println("Qual a categoria do seu compromisso? ");
         for (int c = 0; c < minhasCategorias.size(); c++) {
             System.out.println(c + " - " + minhasCategorias.get(c));
         }
-        // System.out.println("Ou digite o nome da categoria para criar uma nova");
     }
 
-    public String selecionarCategoria() {
-        listarCategorias();
+    public String selecionarCategoria() { // editar a categoria que esta no indice certo no array
         try {
+            listarCategorias();
+            System.out.println("Escolha uma categoria utilizando dígitos numéricos: ");
             String escolha = Input.setChar();
-            System.out.println("A categoria " + minhasCategorias.get(Integer.parseInt(escolha)));
-            return minhasCategorias.get(Integer.parseInt(escolha));
+            System.out.println("A categoria " + minhasCategorias.get(Integer.parseInt(escolha)) + " foi selecionada");
+
+            int catformatada = Integer.parseInt(escolha);
+            return minhasCategorias.get(catformatada);
         } catch (Exception e) {
             System.out.println("Categoria não encontrada." + "\n Deseja criar uma nova? [S/N]: ");
             String sn = Input.setChar().toUpperCase().strip();
@@ -116,17 +118,147 @@ public class Pessoa {
                 System.out.println("A categoria " + minhasCategorias.get(minhasCategorias.size() -1) + " foi selecionada");
                 return (minhasCategorias.get(minhasCategorias.size() - 1));
             } else {
-                System.out.println("A categoria " + minhasCategorias.get(0) + " foi selecionada");
+                System.out.println("A categoria " + minhasCategorias.get(0) + " foi selecionada"); // default caso decida nao criar
                 return minhasCategorias.get(0);
             }
         }
     }
 
+    public void excluirCategoria() {
+        try {
+            listarCategorias();
+            System.out.println("Informe qual o número da categoria que você deseja excluir: ");
+            int escolha = Input.setNum();
+            while(escolha == 0) {
+                System.out.println("Você não pode excluir a categoria padrão.");
+                System.out.println("Informe qual o número da categoria que você deseja excluir: ");
+                escolha = Input.setNum();
+            }
+            System.out.println("Categoria " + minhasCategorias.get(escolha) + " foi excluida!");
+
+
+
+            minhasCategorias.remove(escolha);
+        } catch (Exception e) {
+            System.out.println("Categoria não encontrada! Tente novamente usando números:  ");
+            excluirCategoria();
+        }
+    }
+
+    // seção compromissos
+
+    public void agendarCompromisso() {
+        // permite ao usuário criar compromissos novos.
+        try {
+            Compromissos comp = new Compromissos();
+
+            System.out.println("Informe a descrição do compromissos que quer criar: ");
+            BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
+            String descricao = scan.readLine();
+
+            comp.desc = descricao;
+            Calendario c = new Calendario();
+            c.agendar();
+
+            comp.data = c;
+
+            comp.categ = this.selecionarCategoria();
+
+            meusCompromissos.add(comp);
+            sortCompromissos(comp.data.parseInput());
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void sortCompromissos(ZonedDateTime date){
+
+
+    }
+
+/*
+List<Object> sortedList = objectList.stream()
+           .sorted(Comparator.comparing(Object :: getLocalDateTime).reversed())
+           .collect(Collectors.toList());
+ */
+
+    public void listarCompromissos() {
+        for (int c = 0; c < meusCompromissos.size(); c++) {
+            System.out.println((c+1) + " - " + meusCompromissos.get(c).desc + "\n    (" + meusCompromissos.get(c).categ + ")\n    " + meusCompromissos.get(c).data.dataFormatada + "\n");
+        }
+    }
+    public void removerCompromisso() {
+        try {
+            listarCompromissos();
+            System.out.println("Informe qual o número do compromisso que você deseja excluir: ");
+            int escolha = Input.setNum();
+            System.out.println("Compromisso " + meusCompromissos.get(escolha-1).desc + " foi excluido!");
+            meusCompromissos.remove(escolha-1);
+        } catch (Exception e) {
+            System.out.println("Compromisso não encontrado! Tente novamente usando números:  ");
+            removerCompromisso();
+        }
+    }
+
+    public void editarCompromisso() {
+        listarCompromissos();
+
+        Compromissos comp = new Compromissos();
+
+        try {
+            System.out.println("Informe qual o número do compromisso que você deseja editar: ");
+            int escolhaComp = Input.setNum();
+            comp = meusCompromissos.get(escolhaComp-1);
+        } catch (Exception e) {
+            System.out.println("Compromisso não encontrado! Tente novamente usando números:  ");
+            editarCompromisso();
+        }
+
+        System.out.println("Informe o que você deseja editar:\n1- Descrição\n2- Categoria\n3- Data");
+        Scanner input = new Scanner(System.in);
+        String escolhaOp = input.nextLine();
+
+        switch(escolhaOp) {
+            case "1":
+                try {
+                    System.out.println("Informe a nova descrição do compromisso: "); // duplicado?
+                    BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
+                    String descricao = scan.readLine();
+
+                    comp.desc = descricao;
+                } catch (Exception e) {
+                }
+                break;
+            case "2":
+                try {
+                    System.out.println("Informe a nova categoria do compromisso: ");
+                    this.listarCategorias();
+
+                    comp.categ = this.selecionarCategoria();
+                } catch (Exception e) {
+
+                }
+                break;
+            case "3":
+                    comp.data = comp.data.agendar();
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente:");
+                editarCompromisso();
+                break;
+        }
+    }
+
+    // construtores
+
     public Pessoa() {}
 
-    public Pessoa(String nome) {
+    public Pessoa(String nome, String login, String senha) {
         this.nome = nome;
+        this.login = login;
+        this.senha = senha;
 
-        minhasCategorias.add("Default: " + nome); // A categoria padrão do usuário será o próprio nome dele. Utilizado em criarPessoa() para manter a categoria default
+        minhasCategorias.add(nome); // A categoria padrão do usuário será o próprio nome dele. Utilizado em criarPessoa() para manter a categoria default
     }
 }

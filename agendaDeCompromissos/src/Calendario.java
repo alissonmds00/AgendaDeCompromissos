@@ -4,8 +4,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Calendario {
-    private static int hora, min, dia, mes, ano;
+    private static int hora, min, dia, mes, ano; // interno
+    // private static String horaF, minF, diaF, mesF, anoF; usado em compromissos, printado
     final static int anoAtual = YearMonth.now().getYear();
+    public String dataFormatada; // strings acima, formatadas juntas
 
     public static int getHora() {
         return hora;
@@ -82,19 +84,42 @@ public class Calendario {
         return anoAtual;
     }
 
+    private void setDataFormatada(String d, String mes, String a, String h, String min) {
+        dataFormatada = d + "/" + mes + "/" + a + " às " + h + ":" + min;
+    }
+
+    ;
+
+    private String getDataFormatada() {
+        return dataFormatada;
+    }
+
+    ;
+
+
     public ZonedDateTime parseInput() {
-        String dia;
+        String diaF;
         if (getDia() < 10) { // checagem para formatacao
-            dia = "0" + getDia();
-        } else dia = Integer.toString(getDia());
-        String mes;
+            diaF = "0" + getDia();
+        } else diaF = Integer.toString(getDia());
+        String mesF;
         if (getMes() < 10) { // checagem para formatacao
-            mes = "0" + getMes();
-        } else mes = Integer.toString(getMes());
-        String ano = Integer.toString(getAno());
+            mesF = "0" + getMes();
+        } else mesF = Integer.toString(getMes());
+        String horaF;
+        if (getHora() < 10) { // checagem para formatacao
+            horaF = "0" + getHora();
+        } else horaF = Integer.toString(getHora());
+        String minF;
+        if (getMin() < 10) { // checagem para formatacao
+            minF = "0" + getMin();
+        } else minF = Integer.toString(getMin());
+        String anoF;
+        anoF = Integer.toString(getAno());
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd LL yyyy kk:mm X"); // definir formato de parse
-        String input = dia + " " + mes + " " + ano + " " + hora + ":" + min + " -03"; // adequar input a nosso formato
+        String input = diaF + " " + mesF + " " + anoF + " " + horaF + ":" + minF + " -03"; // adequar input a nosso formato
+        setDataFormatada(diaF, mesF, anoF, horaF, minF);
 
         ZonedDateTime zdt = ZonedDateTime.parse(input, formato); // realizando parse, convertemos nosso horario da string
 
@@ -103,22 +128,24 @@ public class Calendario {
         return zdt; // depois trocar para return 4 linhas acima
     }
 
-    public void validarHorario(ZonedDateTime horaCompromisso) {
+    public boolean validarHorario(ZonedDateTime horaCompromisso) {
         ZoneId tz = ZoneId.of("America/Bahia"); // definir fuso horario
         ZonedDateTime curr = ZonedDateTime.now(tz); // hora atual com fuso horario considerado
         if (horaCompromisso.compareTo(curr) > 0) // passa caso horario do compromisso seja depois do horario atual
         {
-            System.out.println("Compromisso agendado para o dia: " + getDia() + "/" + getMes() + "/" + getAno() + " às " + getHora() + ":" + getMin());
+            System.out.println("Compromisso agendado para o dia: " + getDataFormatada());
+            return true;
             // Criar aqui o array que ele irá adicionar
         } else {
             System.out.println("Horario do compromisso ja passou!");
+            return false;
         }
     }
 
     public Calendario() {
     }
 
-    public static <c> void agendar() {
+    public Calendario agendar() {
         System.out.println("Informe o dia para agendar o compromisso: ");
         setDia(Input.setNum());
         System.out.println("Informe o mês para agendar o compromisso: ");
@@ -129,15 +156,10 @@ public class Calendario {
         setHora(Input.setNum());
         System.out.println("Informe os minutos do compromisso: ");
         setMin(Input.setNum());
-        Calendario c = new Calendario(getDia(), getMes(), getAno(), getHora(), getMin());
-        c.validarHorario(c.parseInput());
-    }
-
-    public Calendario(int dia, int mes, int ano, int hora, int min) {
-        this.dia = dia;
-        this.mes = mes;
-        this.ano = ano;
-        this.hora = hora;
-        this.min = min;
+        if (this.validarHorario(this.parseInput())) return this;
+        else {
+            agendar();
+            return null;
+        }
     }
 }
