@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -92,7 +89,7 @@ public class Pessoa {
     }
 
     public void autoCriarCategorias(String cat) { // utilizado somente em criarPessoa() pois PULA CHECAGENS, POR PUXAR DIRETO DO .TXT DA CONTA
-        minhasCategorias.add(cat);
+        if(!cat.equals(this.nome)) minhasCategorias.add(cat);
     }
 
     public void listarCategorias() {
@@ -134,10 +131,13 @@ public class Pessoa {
                 System.out.println("Informe qual o número da categoria que você deseja excluir: ");
                 escolha = Input.setNum();
             }
+            // Antes de deletar a categoria, a categoria do compromisso será setada para a categoria default
             System.out.println("Categoria " + minhasCategorias.get(escolha) + " foi excluida!");
-
-
-
+            for (int c = 0; c < meusCompromissos.size(); c++) {
+                if (meusCompromissos.get(c).categ.equals(minhasCategorias.get(escolha))) {
+                    meusCompromissos.get(c).categ = minhasCategorias.get(0);
+                }
+            }
             minhasCategorias.remove(escolha);
         } catch (Exception e) {
             System.out.println("Categoria não encontrada! Tente novamente usando números:  ");
@@ -158,30 +158,18 @@ public class Pessoa {
 
             comp.desc = descricao;
             Calendario c = new Calendario();
-            c.agendar();
+//            c.agendar();
 
-            comp.data = c;
+            comp.data = c.agendar();
 
             comp.categ = this.selecionarCategoria();
 
             meusCompromissos.add(comp);
-            sortCompromissos(comp.data.parseInput());
 
         } catch (Exception e) {
 
         }
     }
-
-    public void sortCompromissos(ZonedDateTime date){
-
-
-    }
-
-/*
-List<Object> sortedList = objectList.stream()
-           .sorted(Comparator.comparing(Object :: getLocalDateTime).reversed())
-           .collect(Collectors.toList());
- */
 
     public void listarCompromissos() {
         for (int c = 0; c < meusCompromissos.size(); c++) {
@@ -222,7 +210,7 @@ List<Object> sortedList = objectList.stream()
         switch(escolhaOp) {
             case "1":
                 try {
-                    System.out.println("Informe a nova descrição do compromisso: "); // duplicado?
+                    System.out.println("Informe a nova descrição do compromisso: ");
                     BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
                     String descricao = scan.readLine();
 
@@ -259,6 +247,6 @@ List<Object> sortedList = objectList.stream()
         this.login = login;
         this.senha = senha;
 
-        minhasCategorias.add(nome); // A categoria padrão do usuário será o próprio nome dele. Utilizado em criarPessoa() para manter a categoria default
+        minhasCategorias.add(nome);// A categoria padrão do usuário será o próprio nome dele. Utilizado em criarPessoa() para manter a categoria default
     }
 }

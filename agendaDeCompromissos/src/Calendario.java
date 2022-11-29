@@ -5,9 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 public class Calendario {
     private static int hora, min, dia, mes, ano; // interno
-    // private static String horaF, minF, diaF, mesF, anoF; usado em compromissos, printado
+    // private static String horaF, minF, diaF, mesF, anoF; usado em compromissos, printado (OLD)
     final static int anoAtual = YearMonth.now().getYear();
-    public String dataFormatada; // strings acima, formatadas juntas
+    public static String dataFormatada; // strings acima, formatadas juntas
+//    public static ZonedDateTime zdtHora;
+//
+//    public static ZonedDateTime getZdt() { return zdtHora; } ;
 
     public static int getHora() {
         return hora;
@@ -84,13 +87,13 @@ public class Calendario {
         return anoAtual;
     }
 
-    private void setDataFormatada(String d, String mes, String a, String h, String min) {
+    public static void setDataFormatada(String d, String mes, String a, String h, String min) {
         dataFormatada = d + "/" + mes + "/" + a + " às " + h + ":" + min;
     }
 
     ;
 
-    private String getDataFormatada() {
+    public String getDataFormatada() {
         return dataFormatada;
     }
 
@@ -135,7 +138,6 @@ public class Calendario {
         {
             System.out.println("Compromisso agendado para o dia: " + getDataFormatada());
             return true;
-            // Criar aqui o array que ele irá adicionar
         } else {
             System.out.println("Horario do compromisso ja passou!");
             return false;

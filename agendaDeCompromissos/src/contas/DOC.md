@@ -8,6 +8,7 @@ Na primeira linha do arquivo, há a senha do usuário; na segunda, seu nome.
 Seu separador é <CATEG_SEP> e seguem, uma por linha. (Por padrão, toda conta possui uma categoria número zero chamada "Default: (nome da conta)".)
 
 ## Seção de compromissos
-Seu separador é <COMP_SEP> e agrupam-se em duas linhas.
+Seu separador é <COMP_SEP> e agrupam-se em três linhas.
 A primeira contém o nome do compromisso.
-A segunda contém as categorias associadas ao compromisso, separadas apenas por um caractere de ponto e vírgula ( ';' ).
+A segunda contém a categorias associada ao compromisso. (Caso a mesma seja deletada, a default toma seu lugar.)
+A terceira contém a data do compromisso.

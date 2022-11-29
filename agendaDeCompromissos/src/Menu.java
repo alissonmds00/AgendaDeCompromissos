@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -21,8 +23,8 @@ public abstract class Menu {
                 + "\n 5- Adicionar categoria"
                 + "\n 6- Listar todas as categorias"
                 + "\n 7- Excluir uma categoria existente"
-                + "\n 8- Fazer logoff"
-                + "\n 9- Sair e encerrar o programa"
+                /*+ "\n 8- Fazer logoff"*/
+                + "\n 0- Sair e encerrar o programa"
                 + "\n-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=--=-=-=-"
         );
     }
@@ -87,8 +89,11 @@ public abstract class Menu {
 
     public static Pessoa criarPessoa(String nome, String login, String senha) throws FileNotFoundException {
         Scanner file = new Scanner(new File("agendaDeCompromissos/src/contas/" + login + ".txt")); // accessar conta
+
+        Pessoa temp = new Pessoa(nome, login, senha); // criar Pessoa com nome (este construtor gera a categoria default do usuario!)
+
+        String line1 = file.nextLine(); // pular linha com nome
         file.nextLine(); // pular linha com senha
-        Pessoa temp = new Pessoa(nome, file.nextLine(), senha); // criar Pessoa com nome (este construtor gera a categoria default do usuario!)
 
         // setup categorias
         file.nextLine(); // separador de categorias
@@ -101,24 +106,70 @@ public abstract class Menu {
         // setup compromissos
         if(file.hasNextLine()) line = file.nextLine(); // separador de compromissos
         while(file.hasNextLine()) { // tomar linhas dois a dois...
-            System.out.println(line); // DEBUG AGUARDANDO CRIAR COMPROMISSOS
+            Compromissos c = new Compromissos();
+
+            c.desc = line; // adicionar descricao do compromisso
+
             line = file.nextLine();
-            System.out.println(line); // DEBUG AGUARDANDO CRIAR COMPROMISSOS
+
+            c.categ = line; // adicionar categoria do compromisso
+
+            line = file.nextLine();
+
+            // adicionar data do compromisso
+
+            String[] dataParse = line.split(" ");
+
+            c.data.setDia(Integer.parseInt(dataParse[0]));
+            c.data.setMes(Integer.parseInt(dataParse[1]));
+            c.data.setAno(Integer.parseInt(dataParse[2]));
+            c.data.setHora(Integer.parseInt(dataParse[3])); // AAAAAAAAAAAAAAAAAAAAA
+            c.data.setMin(Integer.parseInt(dataParse[4]));
+            c.data.setDataFormatada(Integer.toString(c.data.getDia()), Integer.toString(c.data.getMes()), Integer.toString(c.data.getAno()), Integer.toString(c.data.getHora()), Integer.toString(c.data.getMin()));
+
+            temp.meusCompromissos.add(c); // adicionar compromisso
+
+            // System.out.println(line);
+            // line=file.nextLine(); DEBUG
+            // System.out.println(line);
+
             if(file.hasNextLine()) line = file.nextLine(); // ...e entao considerar passar para a proxima linha (implica que ha outro compromisso)
         }
 
         return temp;
     }
 
-//    public static void salvarPessoa(Pessoa p) throws FileNotFoundException {
-//        String path = "agendaDeCompromissos/src/contas/" + p.getLogin() + ".txt";
-//
-//        File oldFile = new File(path); // accessar conta
-//        oldFile.delete();
-//
-//        Scanner newFile = new Scanner(new File(path));
-//
-//    }
+    public static void salvarPessoa(Pessoa p) {
+        String path = "agendaDeCompromissos/src/contas/" + p.getLogin() + ".txt";
+
+        File oldFile = new File(path); // accessar conta
+        oldFile.delete();
+
+        try {
+            File newFile = new File(path);
+            FileWriter writeData = new FileWriter(path);
+
+            writeData.write(p.getSenha() + "\n" + p.getNome() + "\n<CATEG_SEP>\n"); // senha, nome e separador de categorias
+
+            for (int c = 0; c < p.minhasCategorias.size(); c++) { // escrever categorias, uma por linha
+                writeData.write(p.minhasCategorias.get(c) + "\n");
+                System.out.println("categoria escrita");
+            }
+
+            writeData.write("<COMP_SEP>");
+
+            for (int c = 0; c < p.meusCompromissos.size(); c++) { // escrever compromissos
+                writeData.write("\n" + p.meusCompromissos.get(c).desc + "\n" + p.meusCompromissos.get(c).categ + "\n" +
+                        p.meusCompromissos.get(c).data.getDia() + " " + p.meusCompromissos.get(c).data.getMes() + " " + p.meusCompromissos.get(c).data.getAno() + " " +
+                        p.meusCompromissos.get(c).data.getHora() + " " + p.meusCompromissos.get(c).data.getMin());
+                System.out.println("compromisso escrito");
+            }
+
+            writeData.close();
+        } catch (IOException ignored) {
+            System.out.println("ERRO ao acessar arquivo da conta.");
+        }
+    }
 
     private static void cadastrar(Pessoa p) {
         System.out.println("Insira nome: ");
@@ -147,6 +198,7 @@ public abstract class Menu {
                 // Calendario.agendar(); incompl
                 break;
             case "2": // Listar todos os compromissos
+//                user.sortCompromissos();
                 user.listarCompromissos();
                 break;
             case "3": // Editar um compromisso existente
@@ -157,8 +209,8 @@ public abstract class Menu {
                 break;
             case "5": // Adicionar categoria
                 System.out.println("Categorias criadas até o momento: ");
-                user.listarCategorias(); // lista as categorias do usuário específico
-                user.criarCategorias();
+                user.listarCategorias(); // lista as categorias do usuário
+                user.criarCategorias(); //Cria as categorias do usuário
                 break;
             case "6": // Listar todas as categorias
                 user.listarCategorias();
@@ -166,10 +218,8 @@ public abstract class Menu {
             case "7": // Excluir uma categoria existente
                 user.excluirCategoria();
                 break;
-            case "8": // Fazer logoff
-                login();
-                break;
-            case "9": // Sair e encerrar o programa
+            case "0": // Sair e encerrar o programa
+                salvarPessoa(user);
                 sair();
                 break;
             default:
